@@ -1,13 +1,14 @@
 import os
 from fileFormats import file_types
 import moveFiles
+import shutil
 
-downloadsFolder = r'C:\Users\LENOVO IP\Downloads'
+DOWNLOADSFOLDER = r'C:\Users\LENOVO IP\Downloads'
 
-files = os.listdir(downloadsFolder)
+files = os.listdir(DOWNLOADSFOLDER)
 
 for file in files:
-    file_path = os.path.join(downloadsFolder, file)
+    file_path = os.path.join(DOWNLOADSFOLDER, file)
     if os.path.isfile(file_path):
         for file_type, extensions in file_types.items():
             if file.endswith(extensions):
@@ -16,8 +17,13 @@ for file in files:
             else:
                 if file.startswith("Click me to organize files"):
                     break
-                else:
-                    moveFiles.to_folder(file_path, r'\Misc')
+                try:
+                    destinationfolder_path = os.path.join(DOWNLOADSFOLDER + r'\misc')
+                    shutil.move(file_path, destinationfolder_path)
+                    print(f"File '{file_path}' moved to '{destinationfolder_path}'.")
+                    break
+                except Exception as e:
+                    print(f"Error moving the file: {e}")
                     break
     else:
         print(f"Skipping: {file}")
